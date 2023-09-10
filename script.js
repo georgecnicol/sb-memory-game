@@ -1,6 +1,7 @@
 const gameContainer = document.getElementById("game");
 const startButton = document.getElementById("start");
 let numCardVisible = 0;
+let score = 0;
 
 const COLORS = [
   "red",
@@ -64,12 +65,14 @@ function handleCardClick(event) {
       if(!event.target.classList.contains('visible')){ // clicking on matched card doesn't count
         event.target.classList.toggle('visible', true);
         numCardVisible++;
+        updateScore();
       }
       break; // no timeout yet on one card
     case 1:
       if(!event.target.classList.contains('visible')){
         event.target.classList.toggle('visible', true);
         numCardVisible++;
+        updateScore();
         if (isMatch()){
           numCardVisible = 0;
         }else{ //not matched
@@ -85,6 +88,11 @@ function handleCardClick(event) {
   }
   // you can use event.target to see which element was clicked
   //console.log("you just clicked", event.target, "cards visible:", numCardVisible);
+}
+
+function updateScore(){
+  score++;
+  showMessage(`Your score: ${score}`);
 }
 
 // remove visible class from those cards that aren't a match
@@ -118,36 +126,54 @@ function isMatch(){
   return match;
 }
 
-function addResetListner(aButton){
-  aButton.addEventListener('click', function(){
-    const memCards = document.querySelectorAll('#game div');
-    for (const card of memCards){
-      card.remove();
-    }
-    let shuffledColors = shuffle(COLORS);
-    createDivsForColors(shuffledColors);
-  })
+
+
+// destroy the deck and recreate a new one
+function rebuild(){
+  const memCards = document.querySelectorAll('#game div');
+  for (const card of memCards){
+    card.remove();
+  }
+  let shuffledColors = shuffle(COLORS);
+  createDivsForColors(shuffledColors);
+  numCardVisible = 0;
+  score = 0;
+  showMessage(`Your score: ${score}`);
+}
+
+// display a message, reset score.
+function showMessage(message){
+  const messageContainer = document.getElementById('messages');
+  const newMessage = document.createElement('p');
+  newMessage.innerText = message;
+  if (messageContainer.firstElementChild){
+    messageContainer.removeChild(messageContainer.firstElementChild); // remove old message
+  };
+  messageContainer.append(newMessage);
 }
 
 
 // make a reset button and initialize the game board and remove yourself
 startButton.addEventListener('click', function(){
-  const memCards = document.querySelectorAll('#game div');
+  makeResetButton();
+  rebuild();
+  showMessage(`Your score: ${score}`);
+  startButton.remove()
+})
+
+
+// invoked when pressing start
+function makeResetButton() {
   const buttonBox = document.querySelector(".button-container");
   const resetButton = document.createElement("button");
   resetButton.setAttribute('id', 'reset');
   resetButton.classList.add('button');
   resetButton.innerText = "Reset";
-  addResetListner(resetButton);
+  resetButton.addEventListener('click', function(){
+    rebuild();
+  })
   buttonBox.append(resetButton);
-  let shuffledColors = shuffle(COLORS);
-  createDivsForColors(shuffledColors);
-  startButton.remove()
-})
-
-
-
-
+}
 
 
 /* dark mode stuff */
