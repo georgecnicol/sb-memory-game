@@ -225,7 +225,7 @@ function makeResetButton() {
 
 function setBestScore(){
   let completeGame = true;
-  const memCards = document.querySelectorAll('#game div');
+  const memCards = document.querySelectorAll('img');
   if (memCards.length){
     for (const card of memCards){
       if (!card.classList.contains('match')){
@@ -239,11 +239,6 @@ function setBestScore(){
     localStorage.bestScore = score;
   }
 }
-
-
-
-
-
 
 /* dark mode stuff */
 const toggleSwitch = document.querySelector('#checkbox');
