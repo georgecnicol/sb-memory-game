@@ -193,17 +193,15 @@ function makeResetButton() {
 function setBestScore(){
   let completeGame = true;
   const memCards = document.querySelectorAll('#game div');
-  console.log(memCards.length);
   if (memCards.length){
     for (const card of memCards){
       if (!card.classList.contains('match')){
         completeGame = false;
       }
     }
-  }else{ // !memCards.len
+  }else{ // !memCards.length
     completeGame = false;
   }
-  console.log("complete game:", completeGame )
   if (completeGame){
     localStorage.bestScore = score;
   }
