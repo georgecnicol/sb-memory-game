@@ -5,31 +5,20 @@
 #game div {
   border: 1px solid black;
   background-color: black;
-  width: 15%;
-  height: 200px;
   margin: 10px;
   display: inline-block;
 }
 
-#game .visible.red {
-  background-color:red;
+#game .hidden {
+  opacity:0%;
 }
-#game .visible.blue {
-  background-color: blue;
-}
-#game .visible.purple {
-  background-color: purple;
-}
-#game .visible.green {
-  background-color: lightgreen;
-}
-#game .visible.orange {
-  background-color: orange;
+
+#game .visible {
+  opacity: 100%;
 }
 
 #game .match {
-  border: 1px solid greenyellow ;
-  font-weight: bolder;
+  border: 3px solid greenyellow ;
 }
 
 .button-container {

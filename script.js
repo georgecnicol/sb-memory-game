@@ -2,7 +2,7 @@ const gameContainer = document.getElementById("game");
 const startButton = document.getElementById("start");
 let numCardVisible = 0;
 let score = 0;
-
+/*
 const COLORS = [
   "red",
   "blue",
@@ -15,10 +15,32 @@ const COLORS = [
   "orange",
   "purple"
 ];
+*/
+
+const officeImages = [
+  "images/g1.png",
+  "images/g2.png",
+  "images/g3.png",
+  "images/g4.png",
+  "images/g5.png",
+  "images/g6.png",
+  "images/g7.png",
+  "images/g8.png",
+  "images/g9.png",
+  "images/g10.png",
+  "images/g11.png",
+  "images/g12.png",
+]
+
+function getNumber(){
+  return (Math.floor(Math.random() * 5)) + 4 // between 4 and 8 pairs
+}
+
 
 // here is a helper function to shuffle an array
 // it returns the same array with values shuffled
 // it is based on an algorithm called Fisher Yates if you want ot research more
+//// This shuffles the officeImage order, we shorten the array in createDivs
 function shuffle(array) {
   let counter = array.length;
 
@@ -42,14 +64,29 @@ function shuffle(array) {
 // this function loops over the array of colors
 // it creates a new div and gives it a class with the value of the color
 // it also adds an event listener for a click for each card
-function createDivsForColors(colorArray) {
-  for (let color of colorArray) {
+function createDivsForImages(baseArray, aNumber) {
+  if (aNumber > officeImages.length){
+    aNumber = officeImages.length;
+  }
+  picArray = JSON.stringify(baseArray); //deep copy original
+  picArray = JSON.parse(picArray);
+  picArray.splice(aNumber, (picArray.length-aNumber)); // shorten pair values to needed length
+  picArray = picArray.concat(picArray); // double - turn pair values into individual cards
+  picArray = shuffle(picArray); // now shuffle the cards themselves
+                                // the first shuffle just rnadomized which images would be used.
+  for (const img of picArray ){
     // create a new div
     const newDiv = document.createElement("div");
+    const newImg = document.createElement("img");
 
     // give it a class attribute for the value we are looping over
-    newDiv.classList.add(color);
+    newImg.classList.add("hidden");
+    newImg.src=img;
+    newImg.alt="pic from The Office";
+    newImg.width="150";
+    newImg.height="220";
 
+    newDiv.append(newImg);
     // call a function handleCardClick when a div is clicked on
     newDiv.addEventListener("click", handleCardClick);
 
@@ -112,19 +149,15 @@ function isMatch(){
   const visibleCards = document.querySelectorAll('.visible:not(.match)');
   let a = visibleCards[0];
   let b = visibleCards[1];
-    if(a.classList.length == b.classList.length){ // have to have same length
-      for(let value of a.classList){
-        if(value !== 'match' && value !== 'visible'){ // value should be a color
-          if(b.classList.contains(value)){ // is the color found in the other classlist?
-            match = true;
-            a.classList.toggle('match', true);
-            b.classList.toggle('match', true);
-          }
-        }
-      }
-    }
-  return match;
+    //if(a.classList.length == b.classList.length){ // have to have same length
+  if(a.getAttribute('src') === b.getAttribute('src')){
+    match = true;
+    a.classList.toggle('match', true);
+    b.classList.toggle('match', true);
+  }
+  return match; //new
 }
+
 
 
 
@@ -136,8 +169,8 @@ function rebuild(){
   for (const card of memCards){
     card.remove();
   }
-  let shuffledColors = shuffle(COLORS);
-  createDivsForColors(shuffledColors);
+  let shuffledOffice = shuffle(officeImages);
+  createDivsForImages(shuffledOffice, getNumber());
   numCardVisible = 0;
   score = 0;
   showMessage(`Your score: ${score}`);
@@ -206,6 +239,8 @@ function setBestScore(){
     localStorage.bestScore = score;
   }
 }
+
+
 
 
 
