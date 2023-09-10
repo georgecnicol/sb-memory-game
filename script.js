@@ -1,4 +1,5 @@
 const gameContainer = document.getElementById("game");
+const startButton = document.getElementById("start");
 let numCardVisible = 0;
 
 const COLORS = [
@@ -37,8 +38,6 @@ function shuffle(array) {
   return array;
 }
 
-let shuffledColors = shuffle(COLORS);
-
 // this function loops over the array of colors
 // it creates a new div and gives it a class with the value of the color
 // it also adds an event listener for a click for each card
@@ -60,7 +59,6 @@ function createDivsForColors(colorArray) {
 
 // TODO: Implement this function!
 function handleCardClick(event) {
-  console.log("you just clicked", event.target, "cards visible:", numCardVisible);
   switch (numCardVisible){
     case 0:
       if(!event.target.classList.contains('visible')){ // clicking on matched card doesn't count
@@ -86,7 +84,7 @@ function handleCardClick(event) {
 
   }
   // you can use event.target to see which element was clicked
-  console.log("now cards visible:", numCardVisible);
+  //console.log("you just clicked", event.target, "cards visible:", numCardVisible);
 }
 
 // remove visible class from those cards that aren't a match
@@ -120,6 +118,48 @@ function isMatch(){
   return match;
 }
 
+function addResetListner(aButton){
+  aButton.addEventListener('click', function(){
+    const memCards = document.querySelectorAll('#game div');
+    for (const card of memCards){
+      card.remove();
+    }
+    let shuffledColors = shuffle(COLORS);
+    createDivsForColors(shuffledColors);
+  })
+}
 
-// when the DOM loads
-createDivsForColors(shuffledColors);
+
+// make a reset button and initialize the game board and remove yourself
+startButton.addEventListener('click', function(){
+  const memCards = document.querySelectorAll('#game div');
+  const buttonBox = document.querySelector(".button-container");
+  const resetButton = document.createElement("button");
+  resetButton.setAttribute('id', 'reset');
+  resetButton.classList.add('button');
+  resetButton.innerText = "Reset";
+  addResetListner(resetButton);
+  buttonBox.append(resetButton);
+  let shuffledColors = shuffle(COLORS);
+  createDivsForColors(shuffledColors);
+  startButton.remove()
+})
+
+
+
+
+
+
+/* dark mode stuff */
+const toggleSwitch = document.querySelector('#checkbox');
+
+if(localStorage.darkmode == 'true'){
+  toggleSwitch.checked = 'true';
+  document.body.className = "dark";
+}
+
+toggleSwitch.addEventListener('click', function(e){
+  const {checked} = toggleSwitch;
+  document.body.className = checked ? "dark" : "";
+  localStorage.darkmode = checked;
+});
