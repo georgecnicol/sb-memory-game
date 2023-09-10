@@ -130,6 +130,8 @@ function isMatch(){
 
 // destroy the deck and recreate a new one
 function rebuild(){
+  setBestScore();
+  showBestScore();
   const memCards = document.querySelectorAll('#game div');
   for (const card of memCards){
     card.remove();
@@ -139,6 +141,7 @@ function rebuild(){
   numCardVisible = 0;
   score = 0;
   showMessage(`Your score: ${score}`);
+
 }
 
 // display a message, reset score.
@@ -152,6 +155,18 @@ function showMessage(message){
   messageContainer.append(newMessage);
 }
 
+function showBestScore(){
+  const messageContainer = document.getElementById('bestscore');
+  const newMessage = document.createElement('p');
+  if (!localStorage.bestScore){
+    localStorage.bestScore = 100;
+  }
+  newMessage.innerText = `Best Score: ${localStorage.bestScore}`;
+  if (messageContainer.firstElementChild){
+    messageContainer.removeChild(messageContainer.firstElementChild); // remove old message
+  };
+  messageContainer.append(newMessage);
+}
 
 // make a reset button and initialize the game board and remove yourself
 startButton.addEventListener('click', function(){
@@ -174,6 +189,27 @@ function makeResetButton() {
   })
   buttonBox.append(resetButton);
 }
+
+function setBestScore(){
+  let completeGame = true;
+  const memCards = document.querySelectorAll('#game div');
+  console.log(memCards.length);
+  if (memCards.length){
+    for (const card of memCards){
+      if (!card.classList.contains('match')){
+        completeGame = false;
+      }
+    }
+  }else{ // !memCards.len
+    completeGame = false;
+  }
+  console.log("complete game:", completeGame )
+  if (completeGame){
+    localStorage.bestScore = score;
+  }
+}
+
+
 
 
 /* dark mode stuff */
