@@ -1,4 +1,5 @@
 const gameContainer = document.getElementById("game");
+let numCardVisible = 0;
 
 const COLORS = [
   "red",
@@ -59,9 +60,66 @@ function createDivsForColors(colorArray) {
 
 // TODO: Implement this function!
 function handleCardClick(event) {
+  console.log("you just clicked", event.target, "cards visible:", numCardVisible);
+  switch (numCardVisible){
+    case 0:
+      if(!event.target.classList.contains('visible')){ // clicking on matched card doesn't count
+        event.target.classList.toggle('visible', true);
+        numCardVisible++;
+      }
+      break; // no timeout yet on one card
+    case 1:
+      if(!event.target.classList.contains('visible')){
+        event.target.classList.toggle('visible', true);
+        numCardVisible++;
+        if (isMatch()){
+          numCardVisible = 0;
+        }else{ //not matched
+          setTimeout(function(){
+            setNotVisible();
+            numCardVisible = 0;
+          },1000);
+        }
+      } // no action taken when clicking on card that is already visible
+    default: // two or more cards already visible
+      break;
+
+  }
   // you can use event.target to see which element was clicked
-  console.log("you just clicked", event.target);
+  console.log("now cards visible:", numCardVisible);
 }
+
+// remove visible class from those cards that aren't a match
+function setNotVisible(){
+  const visibleCards = document.querySelectorAll('.visible');
+    for(const card of visibleCards){
+      if (!card.classList.contains('match')){
+        card.classList.toggle('visible', false);
+    }
+  }
+}
+
+
+// a card only contains at most three classes: color, visible, match
+function isMatch(){
+  let match = false;
+  const visibleCards = document.querySelectorAll('.visible:not(.match)');
+  let a = visibleCards[0];
+  let b = visibleCards[1];
+    if(a.classList.length == b.classList.length){ // have to have same length
+      for(let value of a.classList){
+        if(value !== 'match' && value !== 'visible'){ // value should be a color
+          if(b.classList.contains(value)){ // is the color found in the other classlist?
+            match = true;
+            a.classList.toggle('match', true);
+            b.classList.toggle('match', true);
+          }
+        }
+      }
+    }
+  return match;
+}
+
 
 // when the DOM loads
 createDivsForColors(shuffledColors);

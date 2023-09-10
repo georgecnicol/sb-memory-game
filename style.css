@@ -5,3 +5,24 @@
   margin: 10px;
   display: inline-block;
 }
+
+.visible.red {
+  background-color:red;
+}
+.visible.blue {
+  background-color: blue;
+}
+.visible.purple {
+  background-color: purple;
+}
+.visible.green {
+  background-color: lightgreen;
+}
+.visible.orange {
+  background-color: orange;
+}
+
+#game .match {
+  border: 1px solid greenyellow ;
+  font-weight: bolder;
+}
